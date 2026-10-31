@@ -1,9 +1,9 @@
--- Q1. Company’s total revenue, profit, and overall profit margin.
+-- Q1. Company’s total revenue, gross profit, and overall gross profit margin.
 
 select round(sum(p.unit_price_USD * s.quantity),2) as total_revenue,
-round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as profit,
+round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as gross_profit,
 round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity)
-/sum(p.unit_price_USD * s.quantity) * 100,2) as profit_margin
+/nullif(sum(p.unit_price_USD * s.quantity),0) * 100,2) as gross_profit_margin
 from products p join sales s
 on p.product_key = s.product_key;
 
@@ -36,9 +36,9 @@ limit 10;
 
 select p.category,
 round(sum(p.unit_price_USD * s.quantity),2) as total_revenue,
-round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as profit,
+round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as gross_profit,
 round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity)
-/sum(p.unit_price_USD * s.quantity) * 100,2) as profit_margin
+/nullif(sum(p.unit_price_USD * s.quantity),0) * 100,2) as gross_profit_margin
 from products p join sales s
 on p.product_key = s.product_key
 group by p.category
@@ -100,9 +100,9 @@ where s.product_key is null;
 
 select st.store_key, st.country, st.state,
 round(sum(p.unit_price_USD * s.quantity),2) as total_revenue,
-round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as profit,
+round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity),2) as gross_profit,
 round(sum((p.unit_price_USD - p.unit_cost_USD) * s.quantity)
-/nullif(sum(p.unit_price_USD * s.quantity),0) * 100,2) as profit_margin
+/nullif(sum(p.unit_price_USD * s.quantity),0) * 100,2) as gross_profit_margin
 from products p join sales s
 on p.product_key = s.product_key
 join stores st
